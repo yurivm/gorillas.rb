@@ -11,16 +11,27 @@ module Gorillas
       init_collections
       place_gorillas
       init_font
+      init_game_state
     end
 
     def update
     end
 
+    def button_down(id)
+      if id == Gosu::MsLeft
+        game_state.started_aiming!
+      end
+    end
+
+    def button_up(id)
+      game_state.stopped_aiming! if id == Gosu::MsLeft
+    end
+
     def draw
-      background_image.draw(0, 0, 0)
+      background_image.draw(0, 0, ZOrder::Background)
       houses.draw
       gorillas.draw
-      draw_mouse_coordinates
+      draw_game_state
     end
 
     def needs_cursor?
@@ -29,7 +40,7 @@ module Gorillas
 
     private
 
-    attr_reader :background_image, :gorillas, :houses
+    attr_reader :background_image, :gorillas, :houses, :game_state
 
     def init_background
       @background_image = Gosu::Image.new("media/background.png", tileable: true)
@@ -52,8 +63,12 @@ module Gorillas
       @font = Gosu::Font.new(self, Gosu.default_font_name, 18)
     end
 
-    def draw_mouse_coordinates
-      txt = "Mouse coordinates : X #{mouse_x} Y #{mouse_y}"
+    def init_game_state
+      @game_state = Gorillas::GameState.new(gorillas)
+    end
+
+    def draw_game_state
+      txt = "Mouse coordinates : X #{mouse_x} Y #{mouse_y} #{game_state}"
       @font.draw(txt, 10, 10, 2, 1.0, 1.0, 0xff_ffff00)
     end
   end

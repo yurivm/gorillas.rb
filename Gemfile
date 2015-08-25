@@ -2,7 +2,8 @@ source "https://rubygems.org"
 
 gem "gosu", "0.9.2"
 gem "hasu"
-gem "chipmunk"
+# gem "chipmunk"
+gem "state_machines"
 
 # debugging, testing and stuff
 group :development, :test do

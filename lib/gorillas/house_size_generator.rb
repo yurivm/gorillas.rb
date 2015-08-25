@@ -9,12 +9,16 @@ module Gorillas
       GameWindow::SCREEN_HEIGHT / 5 + rand(GameWindow::SCREEN_HEIGHT / 2)
     end
 
+    def self.random_color_byte
+      rand(255)
+    end
+
     def self.random_color
       Gosu::Color.new(
         255,
-        rand(255),
-        rand(255),
-        rand(255)
+        random_color_byte,
+        random_color_byte,
+        random_color_byte
       )
     end
   end

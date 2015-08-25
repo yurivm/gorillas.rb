@@ -1,5 +1,7 @@
 module Gorillas
   class GorillaCollection
+    include Enumerable
+
     def initialize
       @gorillas = []
     end
@@ -17,6 +19,10 @@ module Gorillas
 
     def draw
       @gorillas.map(&:draw)
+    end
+
+    def each(&block)
+      @gorillas.each(&block)
     end
   end
 end

@@ -19,7 +19,8 @@ module Gorillas
         x, y, color,
         x2, y, color,
         x2, GameWindow::SCREEN_HEIGHT, color,
-        x, GameWindow::SCREEN_HEIGHT, color
+        x, GameWindow::SCREEN_HEIGHT, color,
+        ZOrder::Houses
       )
     end
   end

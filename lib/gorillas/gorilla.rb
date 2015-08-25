@@ -11,7 +11,7 @@ module Gorillas
     end
 
     def draw
-      @image.draw(@x, @y, 1)
+      @image.draw(@x, @y, ZOrder::Gorillas)
     end
 
     def put_on_top_of_house(house)
