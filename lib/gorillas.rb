@@ -1,0 +1,6 @@
+require "gorillas/house"
+require "gorillas/house_collection"
+require "gorillas/house_size_generator"
+require "gorillas/gorilla"
+require "gorillas/gorilla_collection"
+require "gorillas/game_window"
