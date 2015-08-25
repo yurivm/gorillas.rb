@@ -1,0 +1,9 @@
+---
+IrresponsibleModule:
+  enabled: false
+LongParameterList:
+  exclude:
+    - CustomLogger::Formatters::Default#call
+    - Helpers::Proxy#proxy
+TooManyStatements:
+  max_statements: 10

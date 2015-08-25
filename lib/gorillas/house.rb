@@ -2,7 +2,7 @@ module Gorillas
   class House
     attr_reader :x, :y, :width, :height, :color
 
-    def initialize(x: , y:, width:, height:, color: Gosu::Color::RED)
+    def initialize(x:, y:, width:, height:, color: Gosu::Color::RED)
       @x = x
       @y = y
       @width = width

@@ -1,3 +1,4 @@
+require "gosu"
 require "gorillas/house"
 require "gorillas/house_collection"
 require "gorillas/house_size_generator"

@@ -1,4 +1,4 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
 gem "gosu", "0.9.2"
 gem "hasu"
@@ -12,4 +12,3 @@ group :development, :test do
   gem "rubocop"
   gem "reek"
 end
-
