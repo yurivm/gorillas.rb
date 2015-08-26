@@ -1,12 +1,13 @@
 module Gorillas
   class GameState
 
-    attr_reader :aiming_angle, :current_aim
+    attr_reader :aiming_angle, :current_aim, :scaling_factor
 
     def initialize(gorillas)
       set_gorilla_coordinates(gorillas)
       @current_aim = Coordinates.new(0, 0)
       @aiming_angle = 0
+      @scaling_factor = Coordinates.new(0, 0)
       super()
     end
 
@@ -58,6 +59,7 @@ module Gorillas
       @current_aim.x = x
       @current_aim.y = y
       @aiming_angle = calculate_aiming_angle
+      @scaling_factor = calculate_scaling_factor
     end
 
     def active_gorilla_coordinates
@@ -73,7 +75,7 @@ module Gorillas
 
     def to_s
       angle = Gosu.radians_to_degrees(aiming_angle)
-      "state: #{state},aim x #{current_aim.x}, aim y #{current_aim.y}, angle #{sprintf('%2.2f', angle)}, gorilla x #{active_gorilla_coordinates.x}, gorilla y #{active_gorilla_coordinates.y}"
+      "state: #{state},aim x #{current_aim.x}, aim y #{current_aim.y}, angle #{sprintf('%2.2f', angle)}, scale x #{sprintf('%2.2f', scaling_factor.x)}, scale y #{sprintf('%2.2f', scaling_factor.y)}"
     end
 
     private
@@ -81,11 +83,19 @@ module Gorillas
     attr_reader :gorilla_coordinates
 
     def calculate_aiming_angle
-      return 0 if current_aim.y == 0
+      return 0 unless aiming?
       x2 = current_aim.x - aiming_x
       y2 = current_aim.y - aiming_y
       Math.atan2(y2, x2)
     end
 
+    def calculate_scaling_factor
+      return unless aiming?
+      scale_x = 1.5 * (current_aim.x - aiming_x).abs / aiming_x
+      scale_y = 3 * (current_aim.y - aiming_y).abs / aiming_y
+      scale_x = 1 if scale_x < 1
+      scale_y = 1 if scale_y < 1
+      Coordinates.new(scale_x, scale_y)
+    end
   end
 end

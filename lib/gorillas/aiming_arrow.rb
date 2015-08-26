@@ -1,11 +1,11 @@
 module Gorillas
   class AimingArrow
     def initialize
-      @image = Gosu::Image.new("media/arrow_100.png")
+      @image = Gosu::Image.new("media/arrow_45.png")
     end
 
-    def draw_rot(x, y, angle, *args)
-      @image.draw_rot(x, y, ZOrder::AimingArrow, to_degrees(angle), *args)
+    def draw_rot(x, y, angle_in_rad, *args)
+      @image.draw_rot(x, y, ZOrder::AimingArrow, to_degrees(angle_in_rad), *args)
     end
 
     def to_degrees(angle)

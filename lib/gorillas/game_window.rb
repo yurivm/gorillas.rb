@@ -81,11 +81,13 @@ module Gorillas
 
     def draw_aiming_arrow
       aiming_arrow.draw_rot(
-        game_state.active_gorilla_coordinates.x,
+        game_state.active_gorilla_coordinates.x + 20,
         game_state.active_gorilla_coordinates.y,
         game_state.aiming_angle,
         0.5,
-        0.5
+        0.5,
+        game_state.scaling_factor.x,
+        game_state.scaling_factor.y,
       )
     end
 
@@ -93,7 +95,7 @@ module Gorillas
       txt = "Mouse coordinates : X #{mouse_x} Y #{mouse_y}"
       @font.draw(txt, 10, 10, 2, 1.0, 1.0, 0xff_ffff00)
       txt2 = "#{game_state}"
-      @font.draw(txt2, 10, 60, 2, 1.0, 1.0, 0xff_ffff00)
+      @font.draw(txt2, 10, 50, 2, 1.0, 1.0, 0xff_ffff00)
 
     end
   end
