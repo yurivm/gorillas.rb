@@ -11,13 +11,13 @@ module Gorillas
       init_collections
       place_gorillas
       init_font
+      init_aiming_arrow
       init_game_state
     end
 
     def update
       case game_state.state
-        when :player1_aiming, :player2_aiming
-          require "pry"; binding.pry
+        when "player1_aiming", "player2_aiming"
           game_state.set_aim(mouse_x, mouse_y)
       end
     end
@@ -37,6 +37,9 @@ module Gorillas
       houses.draw
       gorillas.draw
       draw_game_state
+      if game_state.aiming?
+        draw_aiming_arrow
+      end
     end
 
     def needs_cursor?
@@ -45,7 +48,7 @@ module Gorillas
 
     private
 
-    attr_reader :background_image, :gorillas, :houses, :game_state
+    attr_reader :background_image, :gorillas, :houses, :game_state, :aiming_arrow
 
     def init_background
       @background_image = Gosu::Image.new("media/background.png", tileable: true)
@@ -72,10 +75,26 @@ module Gorillas
       @game_state = Gorillas::GameState.new(gorillas)
     end
 
-    def draw_game_state
+    def init_aiming_arrow
+      @aiming_arrow = Gorillas::AimingArrow.new
+    end
 
-      txt = "Mouse coordinates : X #{mouse_x} Y #{mouse_y} #{game_state}"
+    def draw_aiming_arrow
+      aiming_arrow.draw_rot(
+        game_state.active_gorilla_coordinates.x,
+        game_state.active_gorilla_coordinates.y,
+        game_state.aiming_angle,
+        0.5,
+        0.5
+      )
+    end
+
+    def draw_game_state
+      txt = "Mouse coordinates : X #{mouse_x} Y #{mouse_y}"
       @font.draw(txt, 10, 10, 2, 1.0, 1.0, 0xff_ffff00)
+      txt2 = "#{game_state}"
+      @font.draw(txt2, 10, 60, 2, 1.0, 1.0, 0xff_ffff00)
+
     end
   end
 end

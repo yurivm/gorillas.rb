@@ -1,5 +1,5 @@
 module Gorillas
   module ZOrder
-    Background, Houses, Gorillas, Explosions, UI = *0..4
+    Background, Houses, Gorillas, AimingArrow, Explosions, UI = *0..5
   end
 end

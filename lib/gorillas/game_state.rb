@@ -1,6 +1,8 @@
 module Gorillas
   class GameState
 
+    attr_reader :aiming_angle, :current_aim
+
     def initialize(gorillas)
       set_gorilla_coordinates(gorillas)
       @current_aim = Coordinates.new(0, 0)
@@ -40,6 +42,10 @@ module Gorillas
       end
     end
 
+    def aiming?
+      state == "player1_aiming" || state == "player2_aiming"
+    end
+
     def aiming_x
       active_gorilla_coordinates.x
     end
@@ -66,17 +72,19 @@ module Gorillas
     end
 
     def to_s
-      "state: #{state}, curr aim x #{current_aim.x}, curr aim y #{current_aim.y}, aiming angle #{aiming_angle}"
+      angle = Gosu.radians_to_degrees(aiming_angle)
+      "state: #{state},aim x #{current_aim.x}, aim y #{current_aim.y}, angle #{sprintf('%2.2f', angle)}, gorilla x #{active_gorilla_coordinates.x}, gorilla y #{active_gorilla_coordinates.y}"
     end
 
     private
-    attr_reader :gorilla_coordinates, :current_aim, :aiming_angle
+
+    attr_reader :gorilla_coordinates
 
     def calculate_aiming_angle
-      return 0 if current_aim.x = 0
-      x2 = (@current_aim.x - aiming_x).abs
-      y2 = (@current_aim.y - aiming_y).abs
-      Math.atan(x2 / y2)
+      return 0 if current_aim.y == 0
+      x2 = current_aim.x - aiming_x
+      y2 = current_aim.y - aiming_y
+      Math.atan2(y2, x2)
     end
 
   end
