@@ -15,6 +15,11 @@ module Gorillas
     end
 
     def update
+      case game_state.state
+        when :player1_aiming, :player2_aiming
+          require "pry"; binding.pry
+          game_state.set_aim(mouse_x, mouse_y)
+      end
     end
 
     def button_down(id)
@@ -68,6 +73,7 @@ module Gorillas
     end
 
     def draw_game_state
+
       txt = "Mouse coordinates : X #{mouse_x} Y #{mouse_y} #{game_state}"
       @font.draw(txt, 10, 10, 2, 1.0, 1.0, 0xff_ffff00)
     end
