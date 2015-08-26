@@ -11,7 +11,7 @@ ClosingParenthesisIndentation:
 Documentation:
   Enabled: false
 LineLength:
-  Max: 120
+  Enabled: false
 MethodLength:
   Max: 15
 Metrics/ClassLength:
