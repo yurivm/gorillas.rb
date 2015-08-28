@@ -13,23 +13,36 @@ module Gorillas
       init_font
       init_aiming_arrow
       init_game_state
+      init_banana
     end
 
     def update
       case game_state.state
         when "player1_aiming", "player2_aiming"
           game_state.set_aim(mouse_x, mouse_y)
+        when "banana1_flying", "banana2_flying"
+          game_state.add_time(update_interval)
       end
     end
 
     def button_down(id)
       if id == Gosu::MsLeft
+        game_state.banana_hit! if game_state.banana_flying?
         game_state.started_aiming!
       end
     end
 
     def button_up(id)
-      game_state.stopped_aiming! if id == Gosu::MsLeft
+      if id == Gosu::MsLeft
+        banana.update(
+          x: game_state.active_gorilla_coordinates.x,
+          y: game_state.active_gorilla_coordinates.y,
+          angle: game_state.aiming_angle,
+          velocity: game_state.velocity
+        )
+        game_state.stopped_aiming!
+        game_state.reset_time!
+      end
     end
 
     def draw
@@ -40,6 +53,9 @@ module Gorillas
       if game_state.aiming?
         draw_aiming_arrow
       end
+      if game_state.banana_flying?
+        draw_banana
+      end
     end
 
     def needs_cursor?
@@ -48,7 +64,7 @@ module Gorillas
 
     private
 
-    attr_reader :background_image, :gorillas, :houses, :game_state, :aiming_arrow
+    attr_reader :background_image, :gorillas, :houses, :game_state, :aiming_arrow, :banana
 
     def init_background
       @background_image = Gosu::Image.new("media/background.png", tileable: true)
@@ -71,6 +87,10 @@ module Gorillas
       @font = Gosu::Font.new(self, Gosu.default_font_name, 18)
     end
 
+    def init_banana
+      @banana = Banana.new
+    end
+
     def init_game_state
       @game_state = Gorillas::GameState.new(gorillas)
     end
@@ -91,12 +111,15 @@ module Gorillas
       )
     end
 
+    def draw_banana
+      banana.draw(game_state.time)
+    end
+
     def draw_game_state
       txt = "Mouse coordinates : X #{mouse_x} Y #{mouse_y}"
       @font.draw(txt, 10, 10, 2, 1.0, 1.0, 0xff_ffff00)
       txt2 = "#{game_state}"
       @font.draw(txt2, 10, 50, 2, 1.0, 1.0, 0xff_ffff00)
-
     end
   end
 end

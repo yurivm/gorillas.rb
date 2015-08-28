@@ -1,13 +1,15 @@
 module Gorillas
   class GameState
 
-    attr_reader :aiming_angle, :current_aim, :scaling_factor
+    attr_reader :aiming_angle, :current_aim, :scaling_factor, :velocity, :time
 
     def initialize(gorillas)
       set_gorilla_coordinates(gorillas)
       @current_aim = Coordinates.new(0, 0)
       @aiming_angle = 0
       @scaling_factor = Coordinates.new(0, 0)
+      @velocity = 0
+      @time = 0
       super()
     end
 
@@ -26,8 +28,13 @@ module Gorillas
       end
 
       event :stopped_aiming do
-        transition player1_aiming: :player1_turn
-        transition player2_aiming: :player2_turn
+        transition player1_aiming: :banana1_flying
+        transition player2_aiming: :banana2_flying
+      end
+
+      event :banana_hit do
+        transition banana1_flying: :player1_turn
+        transition banana2_flying: :player2_turn
       end
 
       state :player1_aiming, :player1_turn do
@@ -47,6 +54,10 @@ module Gorillas
       state == "player1_aiming" || state == "player2_aiming"
     end
 
+    def banana_flying?
+      state == "banana1_flying" || state == "banana2_flying"
+    end
+
     def aiming_x
       active_gorilla_coordinates.x
     end
@@ -60,6 +71,7 @@ module Gorillas
       @current_aim.y = y
       @aiming_angle = calculate_aiming_angle
       @scaling_factor = calculate_scaling_factor
+      @velocity = calculate_velocity
     end
 
     def active_gorilla_coordinates
@@ -73,9 +85,17 @@ module Gorillas
       end
     end
 
+    def reset_time!
+      @time = 0
+    end
+
+    def add_time(time)
+      @time += time
+    end
+
     def to_s
       angle = Gosu.radians_to_degrees(aiming_angle)
-      "state: #{state},aim x #{current_aim.x}, aim y #{current_aim.y}, angle #{sprintf('%2.2f', angle)}, scale x #{sprintf('%2.2f', scaling_factor.x)}, scale y #{sprintf('%2.2f', scaling_factor.y)}"
+      "state: #{state},aim x #{current_aim.x}, aim y #{current_aim.y}, angle #{sprintf('%2.2f', angle)}, scale x #{sprintf('%2.2f', scaling_factor.x)}, scale y #{sprintf('%2.2f', scaling_factor.y)}, velocity #{velocity}"
     end
 
     private
@@ -84,8 +104,6 @@ module Gorillas
 
     def calculate_aiming_angle
       return 0 unless aiming?
-      x2 = current_aim.x - aiming_x
-      y2 = current_aim.y - aiming_y
       Math.atan2(y2, x2)
     end
 
@@ -96,6 +114,18 @@ module Gorillas
       scale_x = 1 if scale_x < 1
       scale_y = 1 if scale_y < 1
       Coordinates.new(scale_x, scale_y)
+    end
+
+    def x2
+      current_aim.x - aiming_x
+    end
+
+    def y2
+      current_aim.y - aiming_y
+    end
+
+    def calculate_velocity
+      @velocity = Velocity.new(x2 / 2, y2 * 2)
     end
   end
 end

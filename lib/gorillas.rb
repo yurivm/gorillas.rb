@@ -1,6 +1,8 @@
 Bundler.require
 
 require "gorillas/coordinates"
+require "gorillas/velocity"
+require "gorillas/banana"
 require "gorillas/house"
 require "gorillas/house_collection"
 require "gorillas/house_size_generator"
