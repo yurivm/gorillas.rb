@@ -38,7 +38,7 @@ module Gorillas
         banana.update(
           x: game_state.active_gorilla_coordinates.x,
           y: game_state.active_gorilla_coordinates.y,
-          angle: game_state.aiming_angle,
+          angle: game_state.angle,
           velocity: game_state.velocity
         )
         game_state.stopped_aiming!
@@ -101,14 +101,12 @@ module Gorillas
     end
 
     def draw_aiming_arrow
-      aiming_arrow.draw_rot(
-        game_state.active_gorilla_coordinates.x + 20,
+      aiming_arrow.draw_scaled_and_rotated(
+        game_state.active_gorilla_coordinates.x,
         game_state.active_gorilla_coordinates.y,
-        game_state.aiming_angle,
-        0.5,
-        0.5,
-        game_state.scaling_factor.x,
-        game_state.scaling_factor.y,
+        game_state.angle,
+        mouse_x,
+        mouse_y,
       )
     end
 

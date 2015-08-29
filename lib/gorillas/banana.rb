@@ -19,9 +19,7 @@ module Gorillas
     def draw(time)
       #puts "X #{banana_x_at_time(time)}, Y #{banana_y_at_time(time)}, time #{time}"
       t = time / 1000
-      coordinates.x = coordinates.x + banana_x_at_time(t)
-      coordinates.y = coordinates.y + banana_y_at_time(t)
-      @image.draw(coordinates.x, coordinates.y, ZOrder::Banana)
+      @image.draw(coordinates.x + banana_x_at_time(t), coordinates.y + banana_y_at_time(t), ZOrder::Banana)
     end
 
     private

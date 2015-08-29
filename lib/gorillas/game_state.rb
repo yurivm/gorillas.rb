@@ -1,7 +1,7 @@
 module Gorillas
   class GameState
 
-    attr_reader :aiming_angle, :current_aim, :scaling_factor, :velocity, :time
+    attr_reader :current_aim, :time
 
     def initialize(gorillas)
       set_gorilla_coordinates(gorillas)
@@ -10,6 +10,7 @@ module Gorillas
       @scaling_factor = Coordinates.new(0, 0)
       @velocity = 0
       @time = 0
+      @calculator = BallisticsCalculator.new
       super()
     end
 
@@ -58,21 +59,13 @@ module Gorillas
       state == "banana1_flying" || state == "banana2_flying"
     end
 
-    def aiming_x
-      active_gorilla_coordinates.x
-    end
-
-    def aiming_y
-      active_gorilla_coordinates.y
-    end
-
     def set_aim(x, y)
-      @current_aim.x = x
-      @current_aim.y = y
-      @aiming_angle = calculate_aiming_angle
-      @scaling_factor = calculate_scaling_factor
-      @velocity = calculate_velocity
+      calculator.set_initial_values(active_gorilla_coordinates, Coordinates.new(x, y))
+      calculator.calculate_params
     end
+
+    def angle; calculator.angle; end
+    def velocity; calculator.velocity; end
 
     def active_gorilla_coordinates
       gorilla_coordinates[0]
@@ -94,38 +87,12 @@ module Gorillas
     end
 
     def to_s
-      angle = Gosu.radians_to_degrees(aiming_angle)
-      "state: #{state},aim x #{current_aim.x}, aim y #{current_aim.y}, angle #{sprintf('%2.2f', angle)}, scale x #{sprintf('%2.2f', scaling_factor.x)}, scale y #{sprintf('%2.2f', scaling_factor.y)}, velocity #{velocity}"
+      "state: #{state},angle #{sprintf('%2.2f', Gosu.radians_to_degrees(angle))}, velocity #{velocity}"
     end
 
     private
 
-    attr_reader :gorilla_coordinates
+    attr_reader :gorilla_coordinates, :calculator
 
-    def calculate_aiming_angle
-      return 0 unless aiming?
-      Math.atan2(y2, x2)
-    end
-
-    def calculate_scaling_factor
-      return unless aiming?
-      scale_x = 1.5 * (current_aim.x - aiming_x).abs / aiming_x
-      scale_y = 3 * (current_aim.y - aiming_y).abs / aiming_y
-      scale_x = 1 if scale_x < 1
-      scale_y = 1 if scale_y < 1
-      Coordinates.new(scale_x, scale_y)
-    end
-
-    def x2
-      current_aim.x - aiming_x
-    end
-
-    def y2
-      current_aim.y - aiming_y
-    end
-
-    def calculate_velocity
-      @velocity = Velocity.new(x2, y2)
-    end
   end
 end
