@@ -5,18 +5,11 @@ module Gorillas
     end
 
     def draw_scaled_and_rotated(x, y, angle_in_rad, mouse_x, mouse_y, *args)
-      diff_x = mouse_x - x
-      diff_y = mouse_y - y
-      scale_x = if diff_x.abs > 1
-        diff_x / width
-      else
-        1
-      end
-      scale_y = if diff_y.abs > 1
-        diff_y / height
-      else
-        1
-      end
+      diff_x = (mouse_x - x).abs
+      diff_y = (mouse_y - y).abs
+      # normalize
+      scale_x = diff_x > width ? diff_x / width : 1.0
+      scale_y = diff_y > height ? diff_y / height : 1.0
       __getobj__.draw_rot(
         x,
         y,
