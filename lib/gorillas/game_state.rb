@@ -125,7 +125,7 @@ module Gorillas
     end
 
     def calculate_velocity
-      @velocity = Velocity.new(x2 / 2, y2 * 2)
+      @velocity = Velocity.new(x2, y2)
     end
   end
 end

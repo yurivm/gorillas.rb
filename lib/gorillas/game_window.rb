@@ -27,6 +27,7 @@ module Gorillas
 
     def button_down(id)
       if id == Gosu::MsLeft
+        # TODO debug only, remove later
         game_state.banana_hit! if game_state.banana_flying?
         game_state.started_aiming!
       end

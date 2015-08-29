@@ -33,11 +33,13 @@ module Gorillas
     end
 
     def banana_x_at_time(time)
-      velocity.x * time * Math.cos(angle)
+      # we have projections already, no need for sin/cos
+      velocity.x * time
     end
 
     def banana_y_at_time(time)
-      velocity.y * time * Math.sin(angle) - (ACCELERATION * time * time / 2)
+      # we have projections already, no need for sin/cos
+      velocity.y * time + (ACCELERATION * time * time / 2)
     end
   end
 end
