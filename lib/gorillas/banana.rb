@@ -6,7 +6,7 @@ module Gorillas
       @coordinates = Coordinates.new(x, y)
       @time = 0
       @angle = 0
-      @image = Gosu::Image.new("media/hammer_and_sickle.png")
+      @image = Gosu::Image.new("media/banana.png")
     end
 
     def update(x:, y:, angle:, velocity:)
@@ -17,9 +17,14 @@ module Gorillas
     end
 
     def draw(time)
-      #puts "X #{banana_x_at_time(time)}, Y #{banana_y_at_time(time)}, time #{time}"
       t = time / 1000
-      @image.draw(coordinates.x + banana_x_at_time(t), coordinates.y + banana_y_at_time(t), ZOrder::Banana)
+      angle = (time / 5) % 360
+      @image.draw_rot(
+        coordinates.x + banana_x_at_time(t),
+        coordinates.y + banana_y_at_time(t),
+        ZOrder::Banana,
+        angle
+        )
     end
 
     private
