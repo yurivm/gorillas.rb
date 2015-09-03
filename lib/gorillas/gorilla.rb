@@ -1,7 +1,5 @@
 module Gorillas
   class Gorilla
-    SPRITE_SIZE = 34
-
     attr_reader :x, :y
 
     def initialize(x:, y:)
@@ -16,7 +14,7 @@ module Gorillas
 
     def put_on_top_of_house(house)
       @x = house.x + (house.x2 - house.x) / 2
-      @y = house.y - SPRITE_SIZE
+      @y = house.y - @image.height
     end
   end
 end
