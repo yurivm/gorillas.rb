@@ -34,8 +34,8 @@ module Gorillas
       end
 
       event :banana_hit do
-        transition banana1_flying: :player1_turn
-        transition banana2_flying: :player2_turn
+        transition banana1_flying: :player2_turn
+        transition banana2_flying: :player1_turn
       end
 
       state :player1_aiming, :player1_turn do
