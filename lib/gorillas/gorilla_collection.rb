@@ -24,5 +24,9 @@ module Gorillas
     def each(&block)
       @gorillas.each(&block)
     end
+
+    def [](index)
+      @gorillas[index]
+    end
   end
 end
