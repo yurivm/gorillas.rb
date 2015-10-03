@@ -20,7 +20,7 @@ module Gorillas
         transition player2_turn: :player2_aiming
       end
 
-      event :stopped_aiming do
+      event :threw_banana do
         transition player1_aiming: :banana1_flying
         transition player2_aiming: :banana2_flying
       end
@@ -30,9 +30,9 @@ module Gorillas
         transition banana2_flying: :player1_turn
       end
 
-      event :banana_hit_a_gorilla do
-        transition banana1_flying: :player2_turn
-        transition banana2_flying: :player1_turn
+      event :gorilla_scored do
+        transition banana1_flying: :player1_celebrating
+        transition banana2_flying: :player2_celebrating
       end
 
       event :banana_offscreen do
@@ -40,13 +40,50 @@ module Gorillas
         transition banana2_flying: :player1_turn
       end
 
+      state :player1_celebrating do
+        def ui_state_name
+          "Player 1 scored!"
+        end
+
+        def angle_offset
+          90
+        end
+
+      end
+
+      state :player2_celebrating do
+        def ui_state_name
+          "Player 2 scored!"
+        end
+
+        def angle_offset
+          180
+        end
+      end
+
       state :player1_aiming, :player1_turn, :banana1_flying do
         def active_gorilla_index
           0
         end
 
+        def inactive_gorilla_index
+          1
+        end
+
         def active_gorilla
           gorillas[active_gorilla_index]
+        end
+
+        def inactive_gorilla
+          gorillas[inactive_gorilla_index]
+        end
+
+        def angle_offset
+          90
+        end
+
+        def ui_state_name
+          "Turn: Player 1"
         end
       end
 
@@ -55,11 +92,28 @@ module Gorillas
           1
         end
 
+        def inactive_gorilla_index
+          0
+        end
+
         def active_gorilla
           gorillas[active_gorilla_index]
         end
+
+        def inactive_gorilla
+          gorillas[inactive_gorilla_index]
+        end
+
+        def angle_offset
+          180
+        end
+
+        def ui_state_name
+          "Turn: Player 2"
+        end
       end
     end
+
 
     def friendly_fire?(hit_gorilla)
       active_gorilla == hit_gorilla
@@ -81,6 +135,10 @@ module Gorillas
       state == "banana1_flying" || state == "banana2_flying"
     end
 
+    def player_celebrating?
+      state == "player1_celebrating" || state == "player2_celebrating"
+    end
+
     def set_aim(x, y)
       calculator.set_values(active_gorilla_coordinates, Coordinates.new(x, y))
       calculator.calculate_params
@@ -95,10 +153,22 @@ module Gorillas
     end
 
     def to_s
-      "state: #{state},angle #{format('%2.2f', Gosu.radians_to_degrees(angle))}, velocity #{velocity}"
+      "#{ui_state_name} Angle: #{formatted_angle} Velocity: #{formatted_velocity_magnitude}"
     end
 
     private
+
+    def formatted_angle
+      format('%2.2f', angle_in_degrees + angle_offset)
+    end
+
+    def formatted_velocity_magnitude
+      format('%2.2f', velocity.magnitude)
+    end
+
+    def angle_in_degrees
+      Gosu.radians_to_degrees(angle)
+    end
 
     attr_reader :gorillas, :calculator
   end

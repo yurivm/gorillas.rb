@@ -38,6 +38,7 @@ GEM
       pry (~> 0.10)
     rainbow (2.0.0)
     rake (10.4.2)
+    recursive-open-struct (0.6.5)
     reek (3.2.1)
       parser (~> 2.2.2.5)
       private_attr (~> 1.1)
@@ -83,6 +84,7 @@ DEPENDENCIES
   hasu
   pry-byebug
   rake
+  recursive-open-struct
   reek
   rspec
   rubocop

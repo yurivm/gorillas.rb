@@ -1,0 +1,35 @@
+---
+images:
+  arrow:
+    file: media/arrow_45.png
+  banana:
+    file: media/banana_24.png
+  explosion:
+    file: media/explosion.png
+    tile_x_size: 64
+    tile_y_size: 64
+  gorilla:
+    file: media/gorilla_tiled_32.png
+    tile_x_size: 32
+    tile_y_size: 34
+  hole:
+    file: media/hole_16.png
+  house:
+    window_dark:
+      file: media/window_dark.png
+    window_bright:
+      file: media/window_bright.png
+  ui:
+    background:
+      file: media/background.png
+    filler:
+      file: media/filler.png
+sounds:
+  background:
+    file: media/day_and_night.ogg
+    enabled: false
+    volume: 0.5
+  explosion:
+    file: media/explosion.ogg
+    enabled: false
+    volume: 0.75

@@ -7,7 +7,7 @@ module Gorillas
     def initialize(x: 0, y: 0, adjust_y: true)
       @coordinates = Coordinates.new(x, y)
       @start_time = 0
-      @image = Gosu::Image.new("media/banana_24.png")
+      @image = Gosu::Image.new(Gorillas.configuration.banana_image_file)
       @image_angle = 0
       @landing_time = 0
       @landing_coordinates = Coordinates.new(0, 0)
@@ -61,7 +61,7 @@ module Gorillas
       @image.draw_rot(
         coordinates.x,
         coordinates.y,
-        ZOrder::Banana,
+        ZOrder::BANANA,
         image_angle
         )
     end
@@ -79,7 +79,7 @@ module Gorillas
     end
 
     def to_s
-      "#{format('%2.2f', x)} #{format('%2.2f', y)}, landing time #{format('%2.2f', landing_time)}, landing at #{format('%2.2f', landing_coordinates.x)} #{format('%2.2f', landing_coordinates.y)}, lands offscreen: #{lands_offscreen?}"
+      "#{format('%2.2f', x)} #{format('%2.2f', y)}"
     end
 
     private

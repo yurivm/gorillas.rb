@@ -10,8 +10,8 @@ module Gorillas
       @width = width
       @height = height
       @color = color
-      @dark_window = Gosu::Image.new("media/window_bright.png")
-      @bright_window = Gosu::Image.new("media/window_dark.png")
+      @dark_window = Gosu::Image.new(Gorillas.configuration.house_dark_window_image_file)
+      @bright_window = Gosu::Image.new(Gorillas.configuration.house_bright_window_image_file)
       @windows = []
     end
 
@@ -37,7 +37,7 @@ module Gorillas
         x2_minus_margin, y, color,
         x2_minus_margin, GameWindow::SCREEN_HEIGHT, color,
         x, GameWindow::SCREEN_HEIGHT, color,
-        ZOrder::Houses
+        ZOrder::HOUSES
       )
       draw_windows
     end
@@ -57,10 +57,10 @@ module Gorillas
     def draw_windows
       counter = 0
       window_x = x + 3
-      while window_x + X_WINDOW_MARGIN < x2 do
+      while window_x + X_WINDOW_MARGIN < x2
         window_y = y + Y_WINDOW_MARGIN / 2
-        while window_y + Y_WINDOW_MARGIN < y2 do
-          window_at(counter).draw(window_x, window_y, ZOrder::Windows)
+        while window_y + Y_WINDOW_MARGIN < y2
+          window_at(counter).draw(window_x, window_y, ZOrder::WINDOWS)
           window_y += y_window_margin
           counter += 1
         end

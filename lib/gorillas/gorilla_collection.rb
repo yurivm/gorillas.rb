@@ -6,8 +6,8 @@ module Gorillas
       @gorillas = []
     end
 
-    def create_gorilla(x:, y:)
-      @gorillas << Gorilla.new(x: x, y: y)
+    def create_gorilla(x:, y:, position:)
+      @gorillas << Gorilla.new(x: x, y: y, position: position)
     end
 
     def stay_on_top_of_houses!(houses)
