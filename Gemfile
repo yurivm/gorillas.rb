@@ -3,6 +3,7 @@ source "https://rubygems.org"
 gem "gosu", "0.9.2"
 gem "hasu"
 # gem "chipmunk"
+gem "recursive-open-struct"
 gem "state_machines"
 
 # debugging, testing and stuff

@@ -10,7 +10,7 @@ module Gorillas
       init_background
       init_filler
       init_score
-      # init_background_music
+      init_background_music if Gorillas.configuration.background_sound_enabled?
       reset
     end
 
@@ -25,29 +25,28 @@ module Gorillas
           explosions << Explosion.new(banana.explosion_coordinates)
           game_state.banana_hit_a_house!
         elsif banana.hits_gorillas?(gorillas)
-          explosions << Explosion.new(banana.explosion_coordinates)
+          explosions << Explosion.new(banana.object_hit.coordinates, scaling_factor: 2.0)
           if game_state.frag?(banana.object_hit)
             increment_score(game_state.active_gorilla_index)
+            game_state.active_gorilla.celebrate!
+            game_state.inactive_gorilla.hide!
+            init_celebration_timestamp
+            game_state.gorilla_scored!
           elsif game_state.friendly_fire?(banana.object_hit)
             decrement_score(game_state.active_gorilla_index)
           end
-          game_state.banana_hit_a_gorilla!
-          # you hit something! reset the game
-          reset
         end
+      when "player1_celebrating", "player2_celebrating"
+        reset if celebration_time_elapsed?
       end
-      explosions.reject! do |explosion|
-        if explosion.done?
-          holes << Hole.new(explosion.coordinates)
-          true
-        end
-      end
-      explosions.map(&:update)
+      update_explosions
     end
 
     def button_down(id)
       if id == Gosu::MsLeft
         game_state.started_aiming! unless game_state.banana_flying?
+      elsif id == Gosu::KbF5
+        reset
       end
     end
 
@@ -58,12 +57,13 @@ module Gorillas
           velocity: game_state.velocity,
           time: Gosu.milliseconds
         )
-        game_state.stopped_aiming!
+        game_state.active_gorilla.throw!
+        game_state.threw_banana!
       end
     end
 
     def draw
-      background_image.draw(0, 0, ZOrder::Background)
+      background_image.draw(0, 0, ZOrder::BACKGROUND)
       houses.draw
       gorillas.draw
       draw_game_state
@@ -79,7 +79,7 @@ module Gorillas
 
     private
 
-    attr_reader :background_image, :gorillas, :houses, :game_state, :aiming_arrow, :banana, :explosions, :holes
+    attr_reader :background_image, :gorillas, :houses, :game_state, :aiming_arrow, :banana, :explosions, :holes, :celebration_timestamp
 
     def reset
       init_collections
@@ -93,11 +93,15 @@ module Gorillas
     end
 
     def init_background
-      @background_image = Gosu::Image.new("media/background.png", tileable: true)
+      @background_image = Gosu::Image.new(Gorillas.configuration.background_image_file, tileable: true)
     end
 
     def init_filler
-      @filler = Gosu::Image.new("media/filler.png", tileable: true)
+      @filler = Gosu::Image.new(Gorillas.configuration.filler_image_file, tileable: true)
+    end
+
+    def init_celebration_timestamp
+      @celebration_timestamp = Gosu.milliseconds
     end
 
     def init_score
@@ -105,8 +109,8 @@ module Gorillas
     end
 
     def init_background_music
-      @background_music = Gosu::Song.new(self, "media/day_and_night.ogg")
-      @background_music.volume = 0.5
+      @background_music = Gosu::Song.new(self, Gorillas.configuration.background_sound_file)
+      @background_music.volume = Gorillas.configuration.background_sound_volume
       @background_music.play(true)
     end
 
@@ -117,9 +121,9 @@ module Gorillas
     end
 
     def place_gorillas
-      @gorillas.create_gorilla(x: rand(GameWindow::SCREEN_WIDTH / 4), y: 0)
+      @gorillas.create_gorilla(x: rand(GameWindow::SCREEN_WIDTH / 4), y: 0, position: :left)
       limit = 3 * (GameWindow::SCREEN_WIDTH / 4) + rand(GameWindow::SCREEN_WIDTH / 4)
-      @gorillas.create_gorilla(x: limit, y: 0)
+      @gorillas.create_gorilla(x: limit, y: 0, position: :right)
       @gorillas.stay_on_top_of_houses!(@houses)
     end
 
@@ -171,6 +175,20 @@ module Gorillas
 
     def decrement_score(index)
       @score[index] -= 1
+    end
+
+    def celebration_time_elapsed?
+      Gosu.milliseconds - celebration_timestamp > Gorilla::CELEBRATION_ANIMATION_TIME
+    end
+
+    def update_explosions
+      explosions.reject! do |explosion|
+        if explosion.done?
+          holes << Hole.new(explosion.coordinates)
+          true
+        end
+      end
+      explosions.map(&:update)
     end
 
     def draw_game_state

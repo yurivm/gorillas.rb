@@ -1,14 +1,20 @@
 module Gorillas
   class Explosion
     FRAME_DELAY = 12
-    EXPLOSION_SOUND = Gosu::Sample.new("media/explosion.ogg")
+    EXPLOSION_SOUND = Gosu::Sample.new(Gorillas.configuration.explosion_sound_file)
+    EXPLOSION_VOLUME = Gorillas.configuration.explosion_sound_volume
     attr_reader :coordinates
 
-    def initialize(coordinates)
-      @animation = Gosu::Image.load_tiles("media/explosion.png", 64, 64)
+    def initialize(coordinates, scaling_factor: 0.75)
+      @animation = Gosu::Image.load_tiles(
+        Gorillas.configuration.explosion_image_file,
+        Gorillas.configuration.explosion_tile_x_size,
+        Gorillas.configuration.explosion_tile_y_size
+      )
       @coordinates = coordinates.clone
       @current_frame = 0
-      EXPLOSION_SOUND.play
+      @scaling_factor = scaling_factor
+      EXPLOSION_SOUND.play(EXPLOSION_VOLUME) if Gorillas.configuration.explosion_sound_enabled?
     end
 
     def update
@@ -29,9 +35,9 @@ module Gorillas
       image.draw(
         x - image.width / 2.0,
         y - image.height / 2.0,
-        ZOrder::Explosions,
-        0.75,
-        0.75
+        ZOrder::EXPLOSIONS,
+        scaling_factor,
+        scaling_factor
       )
     end
 
@@ -41,7 +47,7 @@ module Gorillas
 
     private
 
-    attr_reader :animation
+    attr_reader :animation, :scaling_factor
 
     def current_frame
       animation[@current_frame % @animation.size]

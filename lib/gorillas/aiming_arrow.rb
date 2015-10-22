@@ -1,7 +1,7 @@
 module Gorillas
   class AimingArrow < SimpleDelegator
     def initialize
-      __setobj__(Gosu::Image.new("media/arrow_45.png"))
+      __setobj__(Gosu::Image.new(Gorillas.configuration.arrow_image_file))
     end
 
     def draw_scaled_and_rotated(x, y, angle_in_rad, mouse_x, mouse_y, *args)
@@ -13,7 +13,7 @@ module Gorillas
       __getobj__.draw_rot(
         x,
         y,
-        ZOrder::AimingArrow,
+        ZOrder::AIMING_ARROW,
         to_degrees(angle_in_rad),
         0.5,
         0.5,
