@@ -74,6 +74,10 @@ module Gorillas
       hits?(gorillas)
     end
 
+    def hits_sun?(sun)
+      hits?([sun])
+    end
+
     def offscreen_and_will_not_return?
       lands_offscreen? && offscreen?
     end

@@ -1,7 +1,7 @@
 # gorillas.rb
 Gorillas in Ruby!
 
-![alt tag](https://raw.github.com/yurivm/gorillas.rb/master/media/gorillas_screenshot.png)
+![](https://raw.github.com/yurivm/gorillas.rb/master/media/gorillas_screenshot.png)
 
 ## What is this?
 
@@ -15,6 +15,14 @@ It looks more or less like the original and should also play like the original, 
 The only problem you might encounter is installing [Gosu](https://github.com/gosu/gosu). Gosu has a [tutorial](https://github.com/gosu/gosu/wiki/Ruby-Tutorial) that also explains how to set it up on Linux, Mac and Windows.
 
 At some point I'm going to try to package everything into a single package, but I'm not sure if that works.
+
+## Running
+
+just
+
+```
+bundle exec ruby gorillas.rb
+```
 
 ## Configuration
 

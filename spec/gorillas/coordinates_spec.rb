@@ -12,7 +12,7 @@ describe Gorillas::Coordinates do
         expect(subject.x_offscreen?).to eq(true)
       end
     end
-    context "when x more than game window width" do
+    context "when x is greater than the game window width" do
       let(:x) { Gorillas::GameWindow::SCREEN_WIDTH + 1 }
       it "returns true" do
         expect(subject.x_offscreen?).to eq(true)
@@ -33,7 +33,7 @@ describe Gorillas::Coordinates do
         expect(subject.y_offscreen?).to eq(true)
       end
     end
-    context "when y more than game window width" do
+    context "when y is greater than game window width" do
       let(:y) { Gorillas::GameWindow::SCREEN_HEIGHT + 1 }
       it "returns true" do
         expect(subject.y_offscreen?).to eq(true)
