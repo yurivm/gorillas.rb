@@ -14,6 +14,26 @@ It looks more or less like the original and should also play like the original, 
 
 The only problem you might encounter is installing [Gosu](https://github.com/gosu/gosu). Gosu has a [tutorial](https://github.com/gosu/gosu/wiki/Ruby-Tutorial) that also explains how to set it up on Linux, Mac and Windows.
 
+### Installing Gosu
+
+on a Mac with Homebrew, do this:
+
+```
+brew install sdl2
+brew install libogg libvorbis
+```
+
+### Installing Ruby
+
+Gorillas.rb should support Ruby 2+, I've specified 2.2.2 in Gemfile. Install that with your favorite tool, rbenv or rvm, or system-wide. Makes no difference.
+
+### Getting gems
+
+```
+gem install bundler
+bundle install
+```
+
 At some point I'm going to try to package everything into a single package, but I'm not sure if that works.
 
 ## Configuration
