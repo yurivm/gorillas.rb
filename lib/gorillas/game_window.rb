@@ -36,6 +36,10 @@ module Gorillas
             game_state.gorilla_scored!
           elsif game_state.friendly_fire?(banana.object_hit)
             decrement_score(game_state.active_gorilla_index)
+            game_state.inactive_gorilla.celebrate!
+            game_state.active_gorilla.hide!
+            init_celebration_timestamp
+            game_state.gorilla_scored!
           end
         end
       when "player1_celebrating", "player2_celebrating"
@@ -53,15 +57,14 @@ module Gorillas
     end
 
     def button_up(id)
-      if id == Gosu::MsLeft && game_state.aiming?
-        banana.set_starting_conditions(
-          coordinates: game_state.active_gorilla_coordinates,
-          velocity: game_state.velocity,
-          time: Gosu.milliseconds
-        )
-        game_state.active_gorilla.throw!
-        game_state.threw_banana!
-      end
+      return unless id == Gosu::MsLeft && game_state.aiming?
+      banana.launch(
+        coordinates: game_state.adjusted_gorilla_coordinates,
+        calculator: game_state.calculator,
+        time: Gosu.milliseconds
+      )
+      game_state.active_gorilla.throw!
+      game_state.threw_banana!
     end
 
     def draw
@@ -136,14 +139,15 @@ module Gorillas
     end
 
     def init_banana
-      @banana = Banana.new
+      @banana = Banana.new(Coordinates.new(0, 0))
     end
 
     def init_sun
-      @sun = Sun.new(
-        x: (GameWindow::SCREEN_WIDTH - Gorillas.configuration.sun_tile_x_size) / 2,
-        y: Gorillas.configuration.sun_tile_y_size / 2
+      sun_coordinates = Coordinates.new(
+        (GameWindow::SCREEN_WIDTH - Gorillas.configuration.sun_tile_x_size) / 2,
+        Gorillas.configuration.sun_tile_y_size / 2
       )
+      @sun = Sun.new(sun_coordinates)
     end
 
     def init_explosions
@@ -164,11 +168,9 @@ module Gorillas
 
     def draw_aiming_arrow
       aiming_arrow.draw_scaled_and_rotated(
-        game_state.active_gorilla_coordinates.x,
-        game_state.active_gorilla_coordinates.y,
+        game_state.active_gorilla_coordinates,
         game_state.angle,
-        mouse_x,
-        mouse_y
+        Coordinates.new(mouse_x, mouse_y)
       )
     end
 

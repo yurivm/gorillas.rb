@@ -1,15 +1,23 @@
 require "spec_helper"
 
 describe Gorillas::Banana do
-  let(:start_velocity) { Gorillas::Velocity.new(20, 40) }
-  let(:adjust_y) { false }
-  subject { described_class.new(adjust_y: adjust_y) }
+  subject { described_class.new(start_coordinates) }
 
   describe "#update_position" do
+  let(:mouse_coordinates) { Gorillas::Coordinates.new( start_coordinates.x + 20, start_coordinates.y + 40) }
+  let(:calculator) do
+    calc = Gorillas::ProjectileCalculator.new
+    calc.set_values(
+      start_coordinates,
+      mouse_coordinates
+    )
+    calc.calculate_params
+    calc
+  end
     before do
-      subject.set_starting_conditions(
+      subject.launch(
         coordinates: start_coordinates,
-        velocity: start_velocity,
+        calculator: calculator,
         time: start_time
       )
     end

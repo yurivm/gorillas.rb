@@ -27,7 +27,11 @@ describe Gorillas::ProjectileCalculator do
         expect(subject.velocity.x).to eq(offset)
         expect(subject.velocity.y).to eq(0)
       end
+      it "lands offscreen" do
+        expect(subject.lands_offscreen?).to be(true)
+      end
     end
+
     context "when the aim is vertical" do
       let(:mouse_coordinates) do
         Gorillas::Coordinates.new(gorilla_coordinates.x, gorilla_coordinates.y + offset)
@@ -39,18 +43,24 @@ describe Gorillas::ProjectileCalculator do
         expect(subject.velocity.x).to eq(0)
         expect(subject.velocity.y).to eq(offset)
       end
+      it "does not land offscreen" do
+        expect(subject.lands_offscreen?).to be(false)
+      end
     end
 
     context "when the aim is the same for X and Y" do
       let(:mouse_coordinates) do
         Gorillas::Coordinates.new(gorilla_coordinates.x + offset, gorilla_coordinates.y + offset)
       end
-      it "returns a 90 deg angle" do
+      it "returns a 45 deg angle" do
         expect(degrees(subject.angle)).to be_within(0.01).of(45)
       end
       it "returns correct speed" do
         expect(subject.velocity.x).to eq(offset)
         expect(subject.velocity.y).to eq(offset)
+      end
+      it "does not land offscreen" do
+        expect(subject.lands_offscreen?).to be(false)
       end
     end
     context "when the aim is negative" do
@@ -58,12 +68,15 @@ describe Gorillas::ProjectileCalculator do
       let(:mouse_coordinates) do
         Gorillas::Coordinates.new(gorilla_coordinates.x + offset, gorilla_coordinates.y + 2 * offset)
       end
-      it "returns a 90 deg angle" do
+      it "returns a -45 deg angle" do
         expect(degrees(subject.angle)).to be_within(0.01).of(-116.56)
       end
       it "returns correct negative speed" do
         expect(subject.velocity.x).to eq(offset)
         expect(subject.velocity.y).to eq(2 * offset)
+      end
+      it "lands offscreen" do
+        expect(subject.lands_offscreen?).to be(true)
       end
     end
   end

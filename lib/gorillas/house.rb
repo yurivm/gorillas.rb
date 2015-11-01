@@ -1,17 +1,15 @@
 module Gorillas
-  class House
+  class House < Sprite
+    HOUSE_MARGIN = 2
     X_WINDOW_MARGIN = 8
     Y_WINDOW_MARGIN = 10
-    HOUSE_MARGIN = 2
     attr_reader :width, :height, :color
 
     def initialize(coordinates:, width:, height:, color: Gosu::Color::RED)
-      @coordinates = coordinates.clone
+      super(coordinates)
       @width = width
       @height = height
       @color = color
-      @dark_window = Gosu::Image.new(Gorillas.configuration.house_dark_window_image_file)
-      @bright_window = Gosu::Image.new(Gorillas.configuration.house_bright_window_image_file)
       @windows = []
     end
 
@@ -19,16 +17,8 @@ module Gorillas
       @x2 ||= (x + width)
     end
 
-    def x
-      coordinates.x
-    end
-
     def y2
       GameWindow::SCREEN_HEIGHT
-    end
-
-    def y
-      coordinates.y
     end
 
     def draw
@@ -48,7 +38,15 @@ module Gorillas
 
     private
 
-    attr_reader :coordinates, :dark_window, :bright_window, :windows
+    attr_reader :windows
+
+    def dark_window
+      Windows::DARK_WINDOW
+    end
+
+    def bright_window
+      Windows::BRIGHT_WINDOW
+    end
 
     def x2_minus_margin
       x2 - HOUSE_MARGIN

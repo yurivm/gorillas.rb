@@ -28,6 +28,8 @@ images:
       file: media/background.png
     filler:
       file: media/filler.png
+options:
+  acceleration: -9.81
 sounds:
   background:
     file: media/day_and_night.ogg

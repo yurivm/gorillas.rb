@@ -4,15 +4,13 @@ module Gorillas
       __setobj__(Gosu::Image.new(Gorillas.configuration.arrow_image_file))
     end
 
-    def draw_scaled_and_rotated(x, y, angle_in_rad, mouse_x, mouse_y, *args)
-      diff_x = (mouse_x - x).abs
-      diff_y = (mouse_y - y).abs
+    def draw_scaled_and_rotated(coordinates, angle_in_rad, mouse_coordinates, *args)
+      @diff_x = (mouse_coordinates.x - coordinates.x).abs
+      @diff_y = (mouse_coordinates.y - coordinates.y).abs
       # normalize
-      scale_x = diff_x > width ? diff_x / width : 1.0
-      scale_y = diff_y > height ? diff_y / height : 1.0
       __getobj__.draw_rot(
-        x,
-        y,
+        coordinates.x,
+        coordinates.y,
         ZOrder::AIMING_ARROW,
         to_degrees(angle_in_rad),
         0.5,
@@ -23,6 +21,16 @@ module Gorillas
     end
 
     private
+
+    attr_reader :diff_x, :diff_y
+
+    def scale_x
+      diff_x > width ? diff_x / width : 1.0
+    end
+
+    def scale_y
+      diff_y > height ? diff_y / height : 1.0
+    end
 
     def to_degrees(angle)
       Gosu.radians_to_degrees(angle)

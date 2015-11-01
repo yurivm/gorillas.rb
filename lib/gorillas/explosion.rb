@@ -56,9 +56,8 @@ module Gorillas
     def frame_expired?
       now = Gosu.milliseconds
       @last_frame_timestamp ||= now
-      if (now - @last_frame_timestamp) > FRAME_DELAY
-        @last_frame_timestamp = now
-      end
+      return unless (now - @last_frame_timestamp) > FRAME_DELAY
+      @last_frame_timestamp = now
     end
   end
 end

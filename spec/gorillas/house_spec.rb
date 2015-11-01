@@ -13,18 +13,6 @@ describe Gorillas::House do
 
   subject { described_class.new(params) }
 
-  describe "#x" do
-    it "returns the X coordinate" do
-      expect(subject.x).to eq(80)
-    end
-  end
-
-  describe "#y" do
-    it "returns the Y coordinate" do
-      expect(subject.x).to eq(80)
-    end
-  end
-
   describe "#x2" do
     it "returns the right border of the house (X + width)" do
       expect(subject.x2).to eq(80 + 100)
