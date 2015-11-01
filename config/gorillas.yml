@@ -19,6 +19,10 @@ images:
       file: media/window_dark.png
     window_bright:
       file: media/window_bright.png
+  sun:
+    file: media/sun.png
+    tile_x_size: 43
+    tile_y_size: 34
   ui:
     background:
       file: media/background.png

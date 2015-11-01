@@ -24,6 +24,8 @@ module Gorillas
         if banana.hits_houses?(houses)
           explosions << Explosion.new(banana.explosion_coordinates)
           game_state.banana_hit_a_house!
+        elsif banana.hits_sun?(sun)
+          sun.hit!
         elsif banana.hits_gorillas?(gorillas)
           explosions << Explosion.new(banana.object_hit.coordinates, scaling_factor: 2.0)
           if game_state.frag?(banana.object_hit)
@@ -66,6 +68,7 @@ module Gorillas
       background_image.draw(0, 0, ZOrder::BACKGROUND)
       houses.draw
       gorillas.draw
+      sun.draw
       draw_game_state
       draw_aiming_arrow if game_state.aiming?
       draw_banana if game_state.banana_flying?
@@ -79,7 +82,7 @@ module Gorillas
 
     private
 
-    attr_reader :background_image, :gorillas, :houses, :game_state, :aiming_arrow, :banana, :explosions, :holes, :celebration_timestamp
+    attr_reader :background_image, :gorillas, :houses, :sun, :game_state, :aiming_arrow, :banana, :explosions, :holes, :celebration_timestamp
 
     def reset
       init_collections
@@ -88,6 +91,7 @@ module Gorillas
       init_aiming_arrow
       init_game_state
       init_banana
+      init_sun
       init_explosions
       init_holes
     end
@@ -133,6 +137,13 @@ module Gorillas
 
     def init_banana
       @banana = Banana.new
+    end
+
+    def init_sun
+      @sun = Sun.new(
+        x: (GameWindow::SCREEN_WIDTH - Gorillas.configuration.sun_tile_x_size) / 2,
+        y: Gorillas.configuration.sun_tile_y_size / 2
+      )
     end
 
     def init_explosions
@@ -198,8 +209,6 @@ module Gorillas
       @font.draw(txt, SCREEN_WIDTH / 2 - txt_width / 2, SCREEN_HEIGHT - 60, ZOrder::UI, 1.0, 1.0, 0xff_ffffff)
       txt2 = "#{game_state}"
       @font.draw(txt2, 10, 10, 2, 1.0, 1.0, 0xff_ffff00)
-      txt3 = "Banana: #{banana}"
-      @font.draw(txt3, 10, 30, 2, 1.0, 1.0, 0xff_ffff00)
     end
   end
 end

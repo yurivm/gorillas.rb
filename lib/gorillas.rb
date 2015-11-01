@@ -75,6 +75,18 @@ module Gorillas
       CONFIG.sounds.explosion.enabled
     end
 
+    def sun_image_file
+      CONFIG.images.sun.file
+    end
+
+    def sun_tile_x_size
+      CONFIG.images.sun.tile_x_size
+    end
+
+    def sun_tile_y_size
+      CONFIG.images.sun.tile_y_size
+    end
+
     def background_sound_file
       CONFIG.sounds.background.file
     end
@@ -104,6 +116,7 @@ require "gorillas/gorilla"
 require "gorillas/gorilla_collection"
 require "gorillas/aiming_arrow"
 require "gorillas/game_window"
+require "gorillas/sun"
 require "gorillas/z_order"
 require "gorillas/projectile_calculator"
 require "gorillas/game_state"

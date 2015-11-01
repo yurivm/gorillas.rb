@@ -1,7 +1,7 @@
 # gorillas.rb
 Gorillas in Ruby!
 
-![alt tag](https://raw.github.com/yurivm/gorillas.rb/master/media/gorillas_screenshot.png)
+![](https://raw.github.com/yurivm/gorillas.rb/master/media/gorillas_screenshot.png)
 
 ## What is this?
 
@@ -35,6 +35,14 @@ bundle install
 ```
 
 At some point I'm going to try to package everything into a single package, but I'm not sure if that works.
+
+## Running
+
+just
+
+```
+bundle exec ruby gorillas.rb
+```
 
 ## Configuration
 
