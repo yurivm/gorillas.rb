@@ -1,5 +1,7 @@
 module Gorillas
   class GameState
+    attr_reader :calculator
+
     def initialize(gorillas)
       @gorillas = gorillas
       @calculator = ProjectileCalculator.new
@@ -35,6 +37,11 @@ module Gorillas
         transition banana2_flying: :player2_celebrating
       end
 
+      event :gorilla_fragged do
+        transition banana1_flying: :player2_celebrating
+        transition banana2_flying: :player1_celebrating
+      end
+
       event :banana_offscreen do
         transition banana1_flying: :player2_turn
         transition banana2_flying: :player1_turn
@@ -48,7 +55,6 @@ module Gorillas
         def angle_offset
           90
         end
-
       end
 
       state :player2_celebrating do
@@ -114,7 +120,6 @@ module Gorillas
       end
     end
 
-
     def friendly_fire?(hit_gorilla)
       active_gorilla == hit_gorilla
     end
@@ -140,7 +145,7 @@ module Gorillas
     end
 
     def set_aim(x, y)
-      calculator.set_values(active_gorilla_coordinates, Coordinates.new(x, y))
+      calculator.set_values(adjusted_gorilla_coordinates, Coordinates.new(x, y))
       calculator.calculate_params
     end
 
@@ -156,20 +161,24 @@ module Gorillas
       "#{ui_state_name} Angle: #{formatted_angle} Velocity: #{formatted_velocity_magnitude}"
     end
 
+    def adjusted_gorilla_coordinates
+      Coordinates.new(active_gorilla_coordinates.x, active_gorilla_coordinates.y - Banana::IMAGE.height)
+    end
+
     private
 
+    attr_reader :gorillas
+
     def formatted_angle
-      format('%2.2f', angle_in_degrees + angle_offset)
+      format("%2.2f", angle_in_degrees + angle_offset)
     end
 
     def formatted_velocity_magnitude
-      format('%2.2f', velocity.magnitude)
+      format("%2.2f", velocity.magnitude)
     end
 
     def angle_in_degrees
       Gosu.radians_to_degrees(angle)
     end
-
-    attr_reader :gorillas, :calculator
   end
 end

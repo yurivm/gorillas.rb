@@ -7,7 +7,7 @@ module Gorillas
     end
 
     def create_gorilla(x:, y:, position:)
-      @gorillas << Gorilla.new(x: x, y: y, position: position)
+      @gorillas << Gorilla.new(Coordinates.new(x, y), position: position)
     end
 
     def stay_on_top_of_houses!(houses)

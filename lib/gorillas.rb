@@ -98,6 +98,10 @@ module Gorillas
     def background_sound_enabled?
       CONFIG.sounds.background.enabled
     end
+
+    def acceleration
+      CONFIG.options.acceleration
+    end
   end
 
   self.configuration = Configuration.new
@@ -106,9 +110,11 @@ end
 require "gorillas/coordinates"
 require "gorillas/bounding_box"
 require "gorillas/velocity"
+require "gorillas/sprite"
 require "gorillas/banana"
 require "gorillas/explosion"
 require "gorillas/hole"
+require "gorillas/windows"
 require "gorillas/house"
 require "gorillas/house_collection"
 require "gorillas/house_parameters_generator"

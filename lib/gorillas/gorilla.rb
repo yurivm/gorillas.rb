@@ -1,31 +1,20 @@
 module Gorillas
-  class Gorilla
+  class Gorilla < Sprite
     THROW_ANIMATION_TIME = 500
     CELEBRATION_ANIMATION_TIME = 3000
     CELEBRATION_FRAME_DELAY = 500
 
-    attr_reader :coordinates
-    attr_reader :x, :y
-
-    def initialize(x:, y:, position:)
+    def initialize(coordinates, position:)
+      super(coordinates)
       @animation = Gosu::Image.load_tiles(
         Gorillas.configuration.gorilla_image_file,
         Gorillas.configuration.gorilla_tile_x_size,
         Gorillas.configuration.gorilla_tile_y_size
       )
-      @coordinates = Coordinates.new(x, y)
       @throw_timestamp = nil
       @celebrate_timestamp = nil
       @hidden = false
       @position = position
-    end
-
-    def x
-      coordinates.x
-    end
-
-    def y
-      coordinates.y
     end
 
     def throw!
@@ -44,14 +33,22 @@ module Gorillas
       image.draw(x, y, ZOrder::GORILLAS) unless hidden?
     end
 
+    def x2
+      x + image.width
+    end
+
+    def y2
+      y + image.height
+    end
+
     def bounding_box
-      @bounding_box ||= create_bounding_box
+      @bounding_box ||= BoundingBox.new(x, y, x2, y2)
     end
 
     def put_on_top_of_house(house)
       coordinates.x = house.x + (house.x2 - house.x) / 2
       coordinates.y = house.y - image.height
-      create_bounding_box
+      @bounding_box = nil
     end
 
     def left?
@@ -103,10 +100,6 @@ module Gorillas
     def celebration_frame
       now = Gosu.milliseconds
       ((now - @celebrate_timestamp) / CELEBRATION_FRAME_DELAY).even? ? @animation[1] : @animation[2]
-    end
-
-    def create_bounding_box
-      BoundingBox.new(x, y, x + image.width, y + image.height)
     end
   end
 end
